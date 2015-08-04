@@ -294,30 +294,43 @@
     [childViewControllers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIViewController * childController = (UIViewController *)obj;
         CGFloat pageOffsetForChild = [self pageOffsetForChildIndex:idx];
-        if (fabs(self.containerView.contentOffset.x - pageOffsetForChild) < CGRectGetWidth(self.containerView.bounds)) {
-            if (![childController parentViewController]) { // Add child
-                [childController beginAppearanceTransition:YES animated:NO];
+        if (fabs(self.containerView.contentOffset.x - pageOffsetForChild) < 2 * CGRectGetWidth(self.containerView.bounds)){
+            CGFloat delta = ceilf(CGRectGetWidth(self.view.bounds) / 5);
+            if (![childController parentViewController]){
                 [self addChildViewController:childController];
-                
-                CGFloat childPosition = [self offsetForChildIndex:idx];
-                [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.containerView.bounds))];
-                childController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-                
-                [self.containerView addSubview:childController.view];
                 [childController didMoveToParentViewController:self];
-                [childController endAppearanceTransition];
-            } else {
                 CGFloat childPosition = [self offsetForChildIndex:idx];
-                [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.containerView.bounds))];
+                if (self.currentIndex == 0 && idx > 0) {
+                    childPosition -= delta;
+                }
+                if (idx == 0) {
+                    [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds)-delta, CGRectGetHeight(self.containerView.bounds))];
+                }
+                else {
+                    [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.containerView.bounds))];
+                }
+                childController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+                [self.containerView addSubview:childController.view];
+            }
+            else{
+                CGFloat childPosition = [self offsetForChildIndex:idx];
+                if (self.currentIndex == 0 && idx > 0) {
+                    childPosition -= delta;
+                }
+                if (idx == 0) {
+                    [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds)-delta, CGRectGetHeight(self.containerView.bounds))];
+                }
+                else {
+                    [childController.view setFrame:CGRectMake(childPosition, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.containerView.bounds))];
+                }
                 childController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             }
-        } else {
-            if ([childController parentViewController]) { // Remove child
-                [childController willMoveToParentViewController:nil];
-                [childController beginAppearanceTransition:NO animated:NO];
+        }
+        else{
+            if ([childController parentViewController]){
                 [childController.view removeFromSuperview];
+                [childController willMoveToParentViewController:nil];
                 [childController removeFromParentViewController];
-                [childController endAppearanceTransition];
             }
         }
     }];
