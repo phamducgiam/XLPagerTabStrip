@@ -104,7 +104,7 @@
     targetFrame.size.height = self.selectedBar.frame.size.height;
     targetFrame.size.width += (toFrame.size.width - fromFrame.size.width) * progressPercentage;
     targetFrame.origin.x += (toFrame.origin.x - fromFrame.origin.x) * progressPercentage;
-    NSUInteger offset = 35;
+    NSUInteger offset = 100;
     float xValue = 0;
     if (self.contentSize.width > self.frame.size.width){
         xValue = MIN(self.contentSize.width - self.frame.size.width, targetFrame.origin.x - offset <= 0 ? 0 : targetFrame.origin.x - offset);
@@ -142,7 +142,7 @@
 {
     UICollectionViewCell * cell = [self.dataSource collectionView:self cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedOptionIndex inSection:0]];
     if (cell){
-        NSUInteger offset = 35;
+        NSUInteger offset = 65;
         float xValue = MIN(
                            MAX(0,
                                self.contentSize.width - self.frame.size.width), // dont scroll if we are at the end of scroll view, if content is smaller than container width we scroll 0

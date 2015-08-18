@@ -28,7 +28,7 @@
 
 @interface XLButtonBarPagerTabStripViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (nonatomic) IBOutlet XLButtonBarView * buttonBarView;
+//@property (nonatomic) IBOutlet XLButtonBarView * buttonBarView;
 @property (nonatomic) BOOL shouldUpdateButtonBarView;
 
 @end
